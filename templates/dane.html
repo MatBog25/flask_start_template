@@ -1,0 +1,6 @@
+{{ user.username }} <br>
+{{ user.password }} <br>
+
+<form method="POST">
+    <a href="{{ url_for('edit_user', id=user.id) }}">Edit</a>
+</form>

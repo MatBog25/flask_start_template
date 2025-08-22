@@ -1,0 +1,13 @@
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.username.label }} {{ form.username }} <br>
+    {{ form.password.label }} {{ form.password }} <br>
+    {{ form.submit() }}
+</form>
+
+<form method="POST">
+    {{ form2.hidden_tag() }}
+    {{ form2.name.label }} {{ form2.name }} <br>
+    {{ form2.price.label }} {{ form2.price }} <br>
+    {{ form2.submit() }}
+</form>

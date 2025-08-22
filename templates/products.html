@@ -1,0 +1,11 @@
+{% for product in products %}
+    <p>Name: {{ product.name }}</p>
+    <p>Price: {{ product.price }}</p>
+{% endfor %}
+
+<form method="POST" action="/products">
+  <select name="sort">
+    <option value="name">Nazwa</option>
+    <option value="price">Cena</option>
+  </select>
+</form>
