@@ -114,7 +114,7 @@ def login():
             return "Invalid credentials"
     return render_template('login.html', form = form)
 
-@app.route('/logout', methods=["GET", "POST"])
+@app.route('/logout', methods=["GET"])
 def logout():
     logout_user()
     return redirect(url_for('index'))
