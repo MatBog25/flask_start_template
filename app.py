@@ -1,90 +1,27 @@
-from flask import Flask, request, render_template, url_for, redirect
-from wtforms import StringField, SubmitField, PasswordField, DateField, EmailField
-from flask_wtf.file import FileField
-from flask_wtf import FlaskForm
-import wtforms.validators
+from flask import Flask, request, render_template, url_for, redirect, session
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-
+from forms.login_register import LoginForm, RegisterForm, EditForm, ProductForm
+from models.user import User, Products, db
 
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
-
-db = SQLAlchemy(app)
+db.init_app(app)
 login_manager = LoginManager(app)
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(150), nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    first_name = db.Column(db.String(150), nullable=False)
-    last_name = db.Column(db.String(150), nullable=False)
-    birth_date = db.Column(db.Date, nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.email}', '{self.password}')"
-    
-    def get_hashed_password(password: str) -> str:
-        """
-        Zamienia hasło w formie tekstowej na bezpieczny hash.
-        """
-        return generate_password_hash(password, method='scrypt')
-
-    def verify_password(hashed_password: str, password: str) -> bool:
-        """
-        Sprawdza, czy podane hasło odpowiada hashowi.
-        """
-        return check_password_hash(hashed_password, password)
-    
-class Products(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(150), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    def __repr__(self):
-        return f"Products('{self.name}', '{self.price}')"
-    
-class LoginForm(FlaskForm):
-    email = StringField('Email', [wtforms.validators.DataRequired(), wtforms.validators.Email()])
-    password = PasswordField('Password', [wtforms.validators.DataRequired()])
-    submit = SubmitField('Login')
-
-class RegisterForm(FlaskForm):
-    email = EmailField('Email', [wtforms.validators.DataRequired(), wtforms.validators.Email()])
-    password = PasswordField('Password', [wtforms.validators.DataRequired()])
-    first_name = StringField('First Name', [wtforms.validators.DataRequired()])
-    last_name = StringField('Last Name', [wtforms.validators.DataRequired()])
-    birth_date = DateField('Birth Date', [wtforms.validators.DataRequired()])
-    submit = SubmitField('Register')
-
-class EditForm(FlaskForm):
-    email = StringField('Email', [wtforms.validators.DataRequired(), wtforms.validators.Email()])
-    first_name = StringField('First Name', [wtforms.validators.DataRequired()])
-    last_name = StringField('Last Name', [wtforms.validators.DataRequired()])
-    birth_date = DateField('Birth Date', [wtforms.validators.DataRequired()])
-    submit = SubmitField('Edit')
-
-class ProductForm(FlaskForm):
-    name = StringField('Name', [wtforms.validators.DataRequired()])
-    price = StringField('Price', [wtforms.validators.DataRequired()])
-    submit = SubmitField('Add Product')
-
 
 @login_manager.user_loader
 def load_user(id):
     return User.query.filter(User.id == int(id)).first()
 
-
 @app.route('/', methods=["GET", "POST"])
 def index():
     db.create_all()
-    return render_template('index.html')
-
+    return render_template('index.html', session = session)
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -109,7 +46,8 @@ def login():
         user = User.query.filter(User.email==form.email.data).first()
         if user is not None and User.verify_password(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for('dane', id=user.id))
+            session['logged_in'] = True
+            return redirect(url_for('index', id=user.id))
         else:
             return "Invalid credentials"
     return render_template('login.html', form = form)
@@ -117,6 +55,7 @@ def login():
 @app.route('/logout', methods=["GET"])
 def logout():
     logout_user()
+    session['logged_in'] = False
     return redirect(url_for('index'))
 
 @app.route('/add', methods=["GET", "POST"])

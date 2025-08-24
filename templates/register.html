@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Rejestracja{% endblock %}
+
+{% block content %}
+
 <form method="POST">
     {{ form.hidden_tag() }}
     {{ form.email.label }} {{ form.email }} <br>
@@ -6,4 +11,9 @@
     {{ form.last_name.label }} {{ form.last_name }} <br>
     {{ form.birth_date.label }} {{ form.birth_date }} <br>
     {{ form.submit() }}
+    {% if not session['logged_in'] %}
+        <p>Masz konto? <a href="{{ url_for('login') }}">Zaloguj się</a></p>
+    {% endif %}
 </form>
+
+{% endblock %}

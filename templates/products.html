@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Produkty{% endblock %}
+
+{% block content %}
+
 {% for product in products %}
     <p>Name: {{ product.name }}</p>
     <p>Price: {{ product.price }}</p>
@@ -8,4 +13,6 @@
     <option value="name">Nazwa</option>
     <option value="price">Cena</option>
   </select>
+  <input type="submit", text="Zatwierdz">
 </form>
+{% endblock %}

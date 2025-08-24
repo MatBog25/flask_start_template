@@ -1,8 +1,8 @@
-
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+
+db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -26,7 +26,6 @@ class User(db.Model, UserMixin):
         Sprawdza, czy podane hasło odpowiada hashowi.
         """
         return check_password_hash(hashed_password, password)
-    
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(150), nullable=False)

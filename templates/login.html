@@ -1,6 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Logowanie{% endblock %}
+
+{% block content %}
+
 <form method="POST">
     {{ form.hidden_tag() }}
     {{ form.email.label }} {{ form.email }} <br>
     {{ form.password.label }} {{ form.password }} <br>
     {{ form.submit() }}
+    {% if not session['logged_in'] %}
+        <p>Nie masz konta? <a href="{{ url_for('register') }}">Zarejestruj się</a></p>
+    {% endif %}
 </form>
+{% endblock %}

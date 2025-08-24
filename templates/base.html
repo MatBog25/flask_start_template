@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}CRM{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block head %}
+    <!-- Możesz dodać własne style CSS tutaj -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% endblock %}
+</head>
+<body>
+    <nav>
+            <a href="{{ url_for('add') }}">Add Products</a>
+            <a href="{{ url_for('products') }}">View Products</a>
+            {% if not session['logged_in'] %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        
+            {% if session['logged_in'] %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+    </nav>
+    <div class="container">
+        {% block content %}
+        <!-- Tu wstawiana będzie treść z innych szablonów -->
+        {% endblock %}
+    </div>
+</body>
+</html>

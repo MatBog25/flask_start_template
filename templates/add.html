@@ -1,9 +1,7 @@
-<form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.username.label }} {{ form.username }} <br>
-    {{ form.password.label }} {{ form.password }} <br>
-    {{ form.submit() }}
-</form>
+{% extends "base.html" %}
+{% block title %}Dodaj produkt{% endblock %}
+
+{% block content %}
 
 <form method="POST">
     {{ form2.hidden_tag() }}
@@ -11,3 +9,5 @@
     {{ form2.price.label }} {{ form2.price }} <br>
     {{ form2.submit() }}
 </form>
+
+{% endblock %}
