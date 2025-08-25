@@ -1,5 +1,8 @@
 <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.username.label }} {{ form.username }} <br>
+    <p>{{ form.first_name.label }} - {{ user.first_name }}: </p>  {{ form.first_name }} <br>
+    <p>{{ form.last_name.label }} - {{ user.last_name }}: </p>  {{ form.last_name }} <br>
+    <p>{{ form.email.label }} - {{ user.email }}: </p>  {{ form.email }} <br>
+    <p>{{ form.birth_date.label }} - {{ user.birth_date }}: </p> {{ form.birth_date }} <br>
     {{ form.submit() }}
 </form>

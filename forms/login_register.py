@@ -16,10 +16,10 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
 class EditForm(FlaskForm):
-    email = StringField('Email', [wtforms.validators.DataRequired(), wtforms.validators.Email()])
-    first_name = StringField('First Name', [wtforms.validators.DataRequired()])
-    last_name = StringField('Last Name', [wtforms.validators.DataRequired()])
-    birth_date = DateField('Birth Date', [wtforms.validators.DataRequired()])
+    email = StringField('Email', [ wtforms.validators.Email()])
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+    birth_date = DateField('Birth Date')
     submit = SubmitField('Edit')
 
 class ProductForm(FlaskForm):

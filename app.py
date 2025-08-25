@@ -81,22 +81,44 @@ def add():
         return redirect(url_for('products'))
 
     return render_template('add.html', form=form, form2=form2)
-    
+
+@login_required
+@app.route('/admin')
+def admin():
+    if not current_user.is_admin:
+        return "Access denied", 403
+    users = User.query.all()
+    return render_template('admin.html', users=users)
+
+@login_required
+@app.route('/users')
+def users():
+    if not current_user.is_admin:
+        return "Access denied", 403
+    users = User.query.all()
+    return render_template('users.html', users=users)
+
 @app.route('/dane/<int:id>', methods=["GET", "POST"])
 def dane(id):
     user = User.query.filter_by(id=id).first()
     form = EditForm()
     return render_template('dane.html', user=user)
 
+@login_required
 @app.route('/edit_user/<int:id>', methods=["GET", "POST"])
 def edit_user(id):
+    if not current_user.is_admin:
+        return "Access denied", 403
     user = User.query.filter_by(id=id).first()
-    form = EditForm()
+    form = EditForm(obj=user)
     if form.validate_on_submit():
-        user.username = form.username.data
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        user.email = form.email.data
+        user.birth_date = form.birth_date.data
         db.session.commit()
-        return redirect(url_for('dane', id=user.id))
-    return render_template('edit_user.html', form=form)
+        return redirect(url_for('users'))
+    return render_template('edit_user.html', form=form, user=user)
 
 @app.route('/products', methods=["GET", "POST"])
 def products():

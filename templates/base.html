@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>{% block title %}CRM{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     {% block head %}
     <!-- Możesz dodać własne style CSS tutaj -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -13,6 +14,10 @@
     <nav>
             <a href="{{ url_for('add') }}">Add Products</a>
             <a href="{{ url_for('products') }}">View Products</a>
+
+            {% if session['logged_in'] and current_user.is_admin %}
+                <a href="{{ url_for('admin') }}">Admin Panel</a>
+            {% endif %}
             {% if not session['logged_in'] %}
                 <a href="{{ url_for('login') }}">Login</a>
                 <a href="{{ url_for('register') }}">Register</a>
@@ -25,6 +30,12 @@
     <div class="container">
         {% block content %}
         <!-- Tu wstawiana będzie treść z innych szablonów -->
+        {% endblock %}
+    </div>
+
+    <div class="scripts">
+        {% block scripts %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
         {% endblock %}
     </div>
 </body>

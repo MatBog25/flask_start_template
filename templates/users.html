@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
+
+{% for user in users %}
+    <p>First Name: {{ user.first_name }}</p>
+    <p>Last Name: {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Birth Date: {{ user.birth_date }}</p>
+    <p>Admin: {{ 'Yes' if user.is_admin else 'No' }}</p>
+    <p>Edytuj <a href="{{ url_for('edit_user', id=user.id, user=user) }}">tutaj</a></p>
+    <br>
+{% endfor %}
+
+{% endblock %}
